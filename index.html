@@ -2,9 +2,11 @@
 <html lang="zh-cn">
 <head>
   <meta charset="UTF-8">
-  <meta content="益启喝，喝酒使我们成长。" name="description" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="format-detection" content="telephone=no">
+  <meta itemprop="name" content="益启喝">
+  <meta name="description" itemprop="description" content="致力将每一场酒局都变得有意义有价值。">
+  <meta itemprop="image" content="./assets/images/favicon.jpg">
   <title>益启喝</title>
   <link rel="icon" type="image/jpeg" href="./assets/images/favicon.jpg" />
   <script>
@@ -197,6 +199,48 @@
         el:'.swiper-pagination-party',
       }
     })
+  }
+  var _title = '益启喝',
+    _des = "致力将每一场酒局都变得有意义有价值。",
+    _pic = "https://yiqihe.org/assets/images/favicon.jpg",
+    _url = document.location.href;
+  function onBridgeReady(){
+      // 分享到朋友圈;
+      WeixinJSBridge.on('menu:share:timeline', function(argv) {
+          WeixinJSBridge.invoke('shareTimeline', {
+              "img_url": _pic,
+              "img_width": "120",
+              "img_height": "120",
+              "link": _url,
+              "desc": _des,
+              "title": _title
+          }, function() {});
+      });
+      //分享给朋友
+      WeixinJSBridge.on('menu:share:appmessage', function(argv) {
+          WeixinJSBridge.invoke('sendAppMessage', {
+              "img_url": _pic,
+              "link": _url,
+              "desc": _des,
+              "title": _title
+          }, function() {})
+      });
+      //同步到微博
+      WeixinJSBridge.on('menu:share:weibo', function(argv) {
+          WeixinJSBridge.invoke('shareWeibo', {
+              "desc": _des,
+              "url": _url,
+          }, function(res) {});
+      })
+      WeixinJSBridge.invoke("setNavigationBarColor", {
+        color: "#D75846"
+      })
+  }
+
+  if (typeof WeixinJSBridge == "undefined"){
+      document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+  }else{
+      onBridgeReady();
   }
   </script>
 </body>
